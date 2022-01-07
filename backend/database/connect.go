@@ -1,21 +1,18 @@
 package database
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/Gurv33r/go-env"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/go-pg/pg/v10"
 )
 
-func NewConn() *gorm.DB {
-	env.LoadFrom("./env/db.env")
-	ENV := env.EnvAsMap([]string{"USR", "PASSWORD", "HOST", "PORT", "DBNAME", "DIALECT"})
-	dbconn := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", ENV["HOST"], ENV["USR"], ENV["DBNAME"], ENV["PASSWORD"], ENV["PORT"])
-	db, err := gorm.Open(postgres.Open(dbconn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+func NewConn() *pg.DB {
+	ENV := env.EnvAsMap([]string{"USR", "PASSWORD", "HOST", "PORT", "DBNAME"})
+	//dbconn := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", ENV["HOST"], ENV["USR"], ENV["DBNAME"], ENV["PASSWORD"], ENV["PORT"])
+	db := pg.Connect(&pg.Options{
+		Addr:     ENV["HOST"] + ":" + ENV["PORT"],
+		User:     ENV["USR"],
+		Password: ENV["PASSWORD"],
+		Database: ENV["DBNAME"],
+	})
 	return db
 }

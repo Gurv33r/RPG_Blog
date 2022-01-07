@@ -5,7 +5,6 @@ import (
 )
 
 type Post struct {
-	Date      string    `json:"date" gorm:"primaryKey"`
-	CreatedAt time.Time `json:"timeCreatedAt"`
-	Content   string    `json:"content"`
+	Date    time.Time `json:"Date" gorm:"primaryKey"`
+	Content string    `json:"content"`
 }
