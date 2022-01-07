@@ -2,9 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"time"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 	"github.com/Gurv33r/go-env"
@@ -16,20 +14,20 @@ var err error
 var db *pg.DB
 
 func init() {
-	log.Println("If you see me multiple times, I am redundant")
 	env.LoadFrom("./env/db.env")
 }
 
 func Router() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc("/", getPosts).Methods("GET")
+	router.HandleFunc("/", allPosts).Methods("GET")
+	router.HandleFunc("/{date}", getPost).Methods("GET")
 	router.HandleFunc("/new", newPost).Methods("POST")
-	//router.HandleFunc("/edit/{date}", editPost).Methods("POST","PUT")
+	router.HandleFunc("/edit/{date}", editPost).Methods("POST", "PUT")
 	router.HandleFunc("/remove/{date}", deletePost).Methods("DELETE")
 	return router
 }
 
-func getPosts(w http.ResponseWriter, r *http.Request) {
+func allPosts(w http.ResponseWriter, r *http.Request) {
 	// search db for posts
 	var posts []database.Post       // make post slice to receive posts in
 	db = database.NewConn()         // establish connection to db
@@ -44,6 +42,26 @@ func getPosts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&posts)
 }
 
+func getPost(w http.ResponseWriter, r *http.Request) {
+	// grab date from uri
+	date := mux.Vars(r)["date"]
+	// query db
+	result := &database.Post{}
+	db = database.NewConn() // establish connection
+	// pass the query
+	err := db.Model(result).
+		Where("date = ?", date).
+		Select()
+	db.Close() //close the connection
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// send json response
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(result)
+}
+
 func newPost(w http.ResponseWriter, r *http.Request) {
 	// decode request into Post struct
 	var post database.Post
@@ -52,8 +70,6 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	post.CreatedAt = time.Now()
-	log.Println("Adding", post, "to DB!")
 	// store post data into db
 	db = database.NewConn()            //establish connection
 	_, err := db.Model(&post).Insert() // pass query, will send back result, but ignore it
@@ -62,7 +78,7 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// send back acceptance code
+	// send back acceptance code and jsonized post
 	w.WriteHeader(200)
 	json.NewEncoder(w).Encode(post)
 }
@@ -70,11 +86,39 @@ func newPost(w http.ResponseWriter, r *http.Request) {
 func deletePost(w http.ResponseWriter, r *http.Request) {
 	date := mux.Vars(r)["date"]
 	db = database.NewConn()
-	_, err := db.Model(&database.Post{}).Where("date = ?", date).Delete()
+	_, err = db.Model(&database.Post{}).
+		Where("date = ?", date).
+		Delete()
 	db.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(200)
+}
+
+func editPost(w http.ResponseWriter, r *http.Request) {
+	// grab new content
+	var post database.Post
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// grab date to edit
+	date := mux.Vars(r)["date"]
+	// update db
+	db := database.NewConn() // establish connection
+	// pass update query
+	_, err = db.Model(&post).
+		Column("content").
+		Where("date = ?", date).
+		Update()
+	db.Close() // close connection
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// respond with status code 200
 	w.WriteHeader(200)
 }
