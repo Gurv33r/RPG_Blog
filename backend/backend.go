@@ -13,11 +13,11 @@ import (
 
 func main() {
 	fmt.Println("Booting up Server")
-	env.LoadFrom("./env/server.env")
+	env.Load()
 	router := api.Router()
 	srv := &http.Server{
 		Handler: router,
-		Addr:    os.Getenv("ADDR"),
+		Addr:    os.Getenv("HOST") + ":" + os.Getenv("PORT"),
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
