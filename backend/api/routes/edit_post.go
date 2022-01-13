@@ -4,16 +4,22 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/http/httputil"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 	"github.com/gorilla/mux"
 )
 
 func EditPost(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL)
+	reqdump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	log.Println(string(reqdump))
 	// grab new content
 	var post database.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
+	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

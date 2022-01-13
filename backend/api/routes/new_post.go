@@ -4,16 +4,22 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"strings"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 )
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL)
+	reqdump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	log.Println(string(reqdump))
 	// decode request into Post struct
 	var post database.Post
-	err := json.NewDecoder(r.Body).Decode(&post)
+	err = json.NewDecoder(r.Body).Decode(&post)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -31,6 +37,7 @@ func NewPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	// send back acceptance code and jsonized posts
+	// send back jsonized posts
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(post)
 }

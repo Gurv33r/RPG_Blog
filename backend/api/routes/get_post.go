@@ -4,13 +4,19 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/http/httputil"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 	"github.com/gorilla/mux"
 )
 
 func GetPost(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL)
+	reqdump, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	log.Println(string(reqdump))
 	// grab date from uri
 	date := mux.Vars(r)["date"]
 	if !validate(date) {
@@ -21,7 +27,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	result := &database.Post{}
 	db := database.NewConn() // establish connection
 	// pass the query
-	err := db.Model(result).
+	err = db.Model(result).
 		Where("date = ?", date).
 		Select()
 	db.Close() //close the connection
@@ -30,6 +36,6 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// send json response
-	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 }
