@@ -9,14 +9,15 @@ import (
 
 	"github.com/Gurv33r/RPG_Blog/backend/api"
 	"github.com/Gurv33r/go-env"
+	"github.com/rs/cors"
 )
 
 func main() {
 	fmt.Println("Booting up Server")
 	env.Load()
 	router := api.Router()
-	srv := &http.Server{
-		Handler: router,
+	srv := &http.Server {
+	  Handler: cors.Default().Handler(router),
 		Addr:    os.Getenv("HOST") + ":" + os.Getenv("PORT"),
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,

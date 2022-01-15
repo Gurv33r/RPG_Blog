@@ -6,6 +6,7 @@ require (
 	github.com/Gurv33r/go-env v0.3.0
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/gorilla/mux v1.8.0
+	github.com/rs/cors v1.8.2
 )
 
 require (

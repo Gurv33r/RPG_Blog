@@ -6,11 +6,11 @@ import (
 )
 
 func NewConn() *pg.DB {
-	ENV := env.EnvAsMap([]string{"DBUSER", "PASSWORD", "HOST", "DBPORT", "DBNAME"})
+	ENV := env.EnvAsMap([]string{"DBUSER", "DBPASS", "DBHOST", "DBPORT", "DBNAME"})
 	db := pg.Connect(&pg.Options{
-		Addr:     ENV["HOST"] + ":" + ENV["DBPORT"],
+		Addr:     ENV["DBHOST"] + ":" + ENV["DBPORT"],
 		User:     ENV["DBUSER"],
-		Password: ENV["PASSWORD"],
+		Password: ENV["DBPASS"],
 		Database: ENV["DBNAME"],
 	})
 	return db
