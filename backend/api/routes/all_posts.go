@@ -2,20 +2,17 @@ package routes
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"net/http/httputil"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 )
 
 func AllPosts(w http.ResponseWriter, r *http.Request) {
-	reqdump, err := httputil.DumpRequest(r, true)
+	// record the request onto the server logs.
+	err := record(r)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Println(string(reqdump))
 	// search db for posts
 	var posts []database.Post       // make post slice to receive posts in
 	db := database.NewConn()        // establish connection to db

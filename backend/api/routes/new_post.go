@@ -2,21 +2,18 @@ package routes
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"net/http/httputil"
 	"strings"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 )
 
 func NewPost(w http.ResponseWriter, r *http.Request) {
-	reqdump, err := httputil.DumpRequest(r, true)
+	// record the request onto the server logs.
+	err := record(r)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Println(string(reqdump))
 	// decode request into Post struct
 	var post database.Post
 	err = json.NewDecoder(r.Body).Decode(&post)

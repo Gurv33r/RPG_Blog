@@ -2,25 +2,22 @@ package routes
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"net/http/httputil"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
 	"github.com/gorilla/mux"
 )
 
 func GetPost(w http.ResponseWriter, r *http.Request) {
-	reqdump, err := httputil.DumpRequest(r, true)
+	// record the request onto the server logs.
+	err := record(r)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Println(string(reqdump))
 	// grab date from uri
 	date := mux.Vars(r)["date"]
-	if !validate(date) {
-		http.Error(w, "Date uri format is YYYY-MM-DD", http.StatusBadRequest)
+	if !isValid(date) {
+		http.Error(w, "Path not found", http.StatusNotFound)
 		return
 	}
 	// query db
