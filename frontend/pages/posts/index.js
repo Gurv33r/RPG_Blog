@@ -6,15 +6,15 @@ function jsxify(post, i) {
   const jsx = [
     <div className="publish-date">{publishDate}</div>,
     <p className="content">{post.Content}</p>,
-    <a href={publishDate}>test</a>,
     <Link href={'/posts/'+publishDate}><u>See full post</u></Link>
   ]
-  if (editDate.Valid){
-    jsx.push(<div className="edit-date">{editDate.Time}</div>)
+  if (editDate){
+    jsx.push(<div className="edit-date"> Edited on {editDate.Time.substring(0,10)} at {editDate.Time.substring(11,16)}</div>)
   }
   return  (
       <div className="post" key={i}>
         {jsx}
+        <br/>
       </div>
   )
 }

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
@@ -32,6 +33,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	log.Println("RESULT = ", result)
 	// send json response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)

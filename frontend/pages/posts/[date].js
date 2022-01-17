@@ -8,8 +8,8 @@ export default function Post( {post} ){
         <p className="content">{post.Content}</p>,
         <Link href={`http://localhost:3000/posts/edit/${publishDate}`}><u>Edit this post</u></Link>
     ];
-    if (editDate.Valid){
-        jsx.push(<div className='edit-date'>{editDate.Time}</div>)
+    if (editDate){
+        jsx.push(<div className='edit-date'> Edited on {editDate.Time.substring(0,10)} at {editDate.Time.substring(11,16)}</div>)
     }
     return (
         <main>
