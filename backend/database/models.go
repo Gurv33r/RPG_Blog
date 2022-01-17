@@ -2,7 +2,7 @@ package database
 
 import (
 	"time"
-
+  
 	"github.com/go-pg/pg/v10/types"
 )
 
