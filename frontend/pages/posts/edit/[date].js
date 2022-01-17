@@ -6,7 +6,7 @@ export default function Edit({ prevData }){
     const router = useRouter()
     async function submitForm(event){
         event.preventDefault()
-        const res = await fetch(`http://localhost:8080/edit/${prevData.Date}`, {
+        const res = await fetch(`http://localhost:8080/edit/${publishDate}`, {
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -31,7 +31,7 @@ export default function Edit({ prevData }){
         <main>
         <h1>Add your edits below</h1>
             <form onSubmit={submitForm}>
-                <h2>Date:{publishDate}</h2>
+                <h2>Date: {publishDate}</h2>
                 <textarea cols="1" rows="1" id="new-content-input" defaultValue={prevData.Content} name="content"></textarea>
                 <button type="submit" id="submit-btn">Submit</button>
                 <Link href={'http://localhost:3000/posts'}>Cancel</Link>
@@ -45,7 +45,6 @@ export default function Edit({ prevData }){
         const res = await fetch(`http://localhost:8080/remove/${publishDate}`)
         if (res.status === 500){
             alert(`Error in deleting post:${await res.text()}\nTry again later.`)
-            
         } else {
             alert('Successfully deleted');
             router.push('/posts')
