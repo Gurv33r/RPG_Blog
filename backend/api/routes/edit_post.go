@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/Gurv33r/RPG_Blog/backend/database"
+	"github.com/go-pg/pg/v10/types"
 	"github.com/gorilla/mux"
 )
 
@@ -25,9 +25,8 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add update time
-	post.UpdatedAt = sql.NullTime{
-		Time:  time.Now(),
-		Valid: true,
+	post.UpdatedAt = types.NullTime{
+		Time: time.Now(),
 	}
 
 	// grab date to edit
@@ -43,7 +42,7 @@ func EditPost(w http.ResponseWriter, r *http.Request) {
 	db := database.NewConn() // establish connection
 	// pass update query
 	_, err = db.Model(&post).
-		Column("content").
+		Column("content", "updated_at").
 		Where("date = ?", date).
 		Update()
 	db.Close() // close connection
