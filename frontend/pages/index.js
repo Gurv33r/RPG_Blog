@@ -1,5 +1,4 @@
 import Link from "next/link"
-import dotenv from 'dotenv'
 
 import styles from '../styles/Home.module.css'
 import postStyles from '../styles/Post.module.css';
@@ -51,7 +50,6 @@ export default function Blog({ posts }) {
   }
 
 export async function getStaticProps() {
-    dotenv.config()
     const res = await fetch(`${process.env.BACKEND_URL}/all`)
     const posts = await res.json();
     return {
