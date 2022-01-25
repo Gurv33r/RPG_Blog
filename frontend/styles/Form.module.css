@@ -1,0 +1,69 @@
+.form{
+    margin: 5vw 1vw 5vw 1vw;
+    padding: 1vw;
+}
+
+.form > form, .form > h1{
+    margin: 5vw;
+}
+
+.error{
+    color: red;
+    margin:15vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.errMsg {
+    font-style: italic;
+    font-size: large;
+    margin-top: 5vw;
+    margin-bottom: 5vw;
+}
+
+.form > h2 {
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    margin: 5vw;
+}
+
+.redBtn{
+    color: white;
+    background-color: red;
+    cursor: pointer;
+    padding: 1vw 2vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    font-size: medium;
+}
+
+.btn {
+    color: black;
+    cursor: pointer;
+    padding: 1vw 2vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    font-size: medium;
+    margin-right: 2vw;
+}
+
+.textarea{
+    background-color: antiquewhite;
+    color: black;
+    border-style: solid;
+    border-color: black;
+    overflow: auto;
+    font-size: 1.5vw;
+    box-sizing: border-box;
+    width: 100%;
+    height: 20vw;
+    padding: 12px 20px;
+    border-radius: 2vw;
+    resize: none;
+    margin-bottom: 2vw;
+}
