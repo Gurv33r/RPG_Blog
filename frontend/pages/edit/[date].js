@@ -33,7 +33,7 @@ export default function Edit({ prevData }){
     return (
         <main>
             <Head>
-                <title>{publishDate}'s Post</title>
+                <title>{publishDate}&apos; Post</title>
                 <meta name='description' content={`Blog post published on ${publishDate}`}/>
             </Head>
             <body>
@@ -82,9 +82,11 @@ export async function getStaticProps({params}) {
 export async function getStaticPaths(){
     const res = await fetch(`${process.env.BACKEND_URL}/all`)
     const posts = await res.json()
-    const paths = posts.map((post) => ({
-        params: {date: post.Date.split('T')[0]}
-    }))
+    const paths = posts.map(post => {
+        params:{
+            date: post.Date.split('T')[0]
+        }
+    })
     return {
         paths,
         fallback: false

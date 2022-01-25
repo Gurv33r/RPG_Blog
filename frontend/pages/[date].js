@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import postStyles from '../styles/Post.module.css'
@@ -7,26 +7,25 @@ export default function Post( {post} ){
     const editDate = post.UpdatedAt
     const publishDate = post.Date.split('T')[0]
     const jsx = [
-        <div className={postStyles.publishDate}>{publishDate}</div>,
-        <p className={postStyles.contentSpec}>{post.Content}</p>,
-        <Link href={`/edit/${publishDate}`} onClick={(event)=>{
-            event.preventDefault()
-            document.body.style.cursor='progress'
-        }}><u className={postStyles.linkSpec}>Edit this post</u></Link>
+        <div key={1} className={postStyles.publishDate}>{publishDate}</div>,
+        <p key={2} className={postStyles.contentSpec}>{post.Content}</p>,
+        <Link key={3} href={`/edit/${publishDate}`}><u className={postStyles.linkSpec}>Edit this post</u></Link>
     ];
     if (editDate){
         jsx.push(<div className={postStyles.editDate}> Edited on {editDate.substring(0,10)} at {editDate.substring(11,16)}</div>)
     }
     return (
-        <div className={styles.container}>
+        <main className={styles.container}>
             <Head>
-                <title>{publishDate}'s Post</title>
+                <title>{publishDate}&apos;s Post</title>
                 <meta name='description' content={`Blog post published on ${publishDate}`}/>
             </Head>
-            <main className={styles.main}>
+            <body>
+                <div className={styles.main}>
                 {jsx}
-            </main>
-        </div>
+                </div>
+            </body>
+        </main>
         
     )   
 }
@@ -47,10 +46,13 @@ export async function getStaticProps({params}){
 
 export async function getStaticPaths(){
     const res = await fetch(`${process.env.BACKEND_URL}/all`)
-    const posts = await res.json()
-    const paths = posts.map((post) => ({
-        params: {date: post.Date.split('T')[0]}
-    }))
+    const posts = await res.text()
+    const data = JSON.parse(posts.replace(/\:null/gi, "\:\"\""))
+    const paths = data.map(post => {
+        params:{
+            date: post.Date.split('T')[0]
+        }
+    })
     return {
         paths,
         fallback: false

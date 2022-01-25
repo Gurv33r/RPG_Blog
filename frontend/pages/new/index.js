@@ -5,7 +5,7 @@ import Head from "next/head"
 export default function NewPost( {dates} ){
     const router = useRouter()
     const currDate = new Date().toISOString()
-    if (dates.includes(currDate.split('T')[0])){
+    if (dates && dates.includes(currDate.split('T')[0])){
         const jsx = (
             <main>
                 <Head>
@@ -16,8 +16,8 @@ export default function NewPost( {dates} ){
                     <div className={styles.error}>
                         <h1>Houston, we have a problem!</h1>
                         <p className={styles.errMsg}>
-                            It seems that you have already made a post for today's date!
-                            Would you like to <b>edit</b> today's post?.
+                            It seems that you have already made a post for today&apos;s date!
+                            Would you like to <b>edit</b> today&apos;s post?.
                         </p>
                         <button type="click" className={styles.btn} onClick={event => {
                             event.preventDefault()
@@ -32,7 +32,7 @@ export default function NewPost( {dates} ){
             </main>
         )
         return jsx
-    } else {
+    }else {
         const submitForm = async event => {
             event.preventDefault()
             // assemble JSON object
@@ -53,7 +53,7 @@ export default function NewPost( {dates} ){
                 router.push('/')
             } else {
                 alert('Successfully submitted')
-                router.push(`/${data.Date}`)
+                router.push(`/${data.Date.split('T')[0]}`)
             }
         }
 
@@ -65,7 +65,7 @@ export default function NewPost( {dates} ){
                 </Head>
                 <body>
                     <div className={styles.form}>
-                        <h1>Today's date is {currDate.split('T')[0]}</h1>
+                        <h1>Today&apos;s date is {currDate.split('T')[0]}</h1>
                         <form onSubmit={submitForm}>
                             <textarea cols="1" rows="1" placeholder="Type out your thoughts here..." className={styles.textarea} name="content"></textarea>
                             <button className={styles.btn} type="submit">Submit</button>
@@ -84,12 +84,11 @@ export default function NewPost( {dates} ){
 export async function getStaticProps(){
     const res = await fetch(process.env.BACKEND_URL + '/all')
     const data = await res.json()
-    const dates = data.map(post => {
-        return post.Date.split('T')[0]
-    });
+    const dates = data ? data.map(post => {post.Date.split('T')[0]}) : null
     return{
         props:{
             dates: dates
         }
-    }
+    } 
+    
 }
