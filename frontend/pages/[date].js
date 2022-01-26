@@ -51,7 +51,7 @@ export async function getStaticPaths(){
     console.log(data, data[0].Date)
     const paths = []
     for (let post in data){
-        paths.push(post.Date)
+        paths.push(post.date)
         console.log(paths)
     }
     console.log(paths)
