@@ -48,11 +48,13 @@ export async function getStaticPaths(){
     const res = await fetch(`${process.env.BACKEND_URL}/all`)
     const posts = await res.text()
     const data = JSON.parse(posts.replace(/\:null/gi, "\:\"\""))
-    const paths = data.map(post => {
-        params:{
-            date: post.Date.split('T')[0]
-        }
-    })
+    console.log(data, data[0].Date)
+    const paths = []
+    for (let post in data){
+        paths.push(post.Date)
+        console.log(paths)
+    }
+    console.log(paths)
     return {
         paths,
         fallback: false
