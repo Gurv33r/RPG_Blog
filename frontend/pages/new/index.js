@@ -4,7 +4,7 @@ import Head from "next/head"
 
 export default function NewPost( {dates} ){
     const router = useRouter()
-    const currDate = new Date().toISOString()
+    const currDate = new Date().toLocaleString('ko-KR').replace('. ', '-')
     if (dates.includes(currDate.split('T')[0])){
         const jsx = (
             <main>
@@ -16,8 +16,8 @@ export default function NewPost( {dates} ){
                     <div className={styles.error}>
                         <h1>Houston, we have a problem!</h1>
                         <p className={styles.errMsg}>
-                            It seems that you have already made a post for today's date!
-                            Would you like to <b>edit</b> today's post?.
+                            It seems that you have already made a post for today&apos;s date!
+                            Would you like to <b>edit</b> today&apos;s post?.
                         </p>
                         <button type="click" className={styles.btn} onClick={event => {
                             event.preventDefault()
@@ -65,7 +65,7 @@ export default function NewPost( {dates} ){
                 </Head>
                 <body>
                     <div className={styles.form}>
-                        <h1>Today's date is {currDate.split('T')[0]}</h1>
+                        <h1>Today&apos;s date is {currDate.split('T')[0]}</h1>
                         <form onSubmit={submitForm}>
                             <textarea cols="1" rows="1" placeholder="Type out your thoughts here..." className={styles.textarea} name="content"></textarea>
                             <button className={styles.btn} type="submit">Submit</button>

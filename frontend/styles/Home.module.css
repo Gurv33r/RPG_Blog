@@ -114,3 +114,9 @@
     flex-direction: column;
   }
 }
+
+.main > p {
+  color:red;
+  font-size: xx-large;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
